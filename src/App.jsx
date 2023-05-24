@@ -11,6 +11,19 @@ function App() {
     getTodos().then((res) => setTodos(res));
   }, []);
 
+  // input에 입력을 하였을 때(change가 발생)
+  const handleOnChange = (event) => {
+    setTodoTitle(event.target.value);
+  };
+
+  // submit이 발생하였을 때
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    setTodoTitle("");
+    await createTodo(todoTitle);
+    await getTodos().then((res) => setTodos(res));
+  };
+
   return (
     <>
       <h1 className="title">Todo!</h1>
@@ -18,21 +31,8 @@ function App() {
       {todos?.map((todo) => (
         <Todo todo={todo} setTodos={setTodos} todos={todos} key={todo.id} /> //props 전달
       ))}
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setTodoTitle("");
-          await createTodo(todoTitle); // 삽입
-          await getTodos().then((res) => setTodos(res));
-        }}
-      >
-        <input
-          type="text"
-          value={todoTitle}
-          onChange={(event) => {
-            setTodoTitle(event.target.value);
-          }}
-        />
+      <form onSubmit={handleOnSubmit}>
+        <input type="text" value={todoTitle} onChange={handleOnChange} />
       </form>
     </>
   );
